@@ -44,7 +44,6 @@ public class SistemaDeCifradoRSA {
     public static int[] generarClavesRSA(Scanner teclado) {
         System.out.println("Generación de Claves RSA");
 
-        // Pedir al usuario que ingrese dos números primos grandes p y q
         int p = generarNumeroPrimo(teclado);
         int q;
         do {
@@ -115,14 +114,14 @@ public class SistemaDeCifradoRSA {
 
     public static boolean esCoprimo(int a, int b) {
         if (a == 0 || b == 0) {
-            return false; // Si a o b es cero, no son coprimos
+            return false;
         }
         while (b != 0) {
             int temp = b;
             b = a % b;
             a = temp;
         }
-        return Math.abs(a) == 1; // Si el valor absoluto de a es 1, son coprimos
+        return Math.abs(a) == 1;
     }
 
     public static int calcularD(int e, int phiN) {
@@ -150,12 +149,12 @@ public class SistemaDeCifradoRSA {
 
     // Paso 2: Cifrado de Mensajes
     private static int[] cifrarMensaje(String mensaje, int clave, int n) {
-        int[] mensajeCifrado = new int[mensaje.length()]; // Crear un arreglo para almacenar los bloques cifrados
+        int[] mensajeCifrado = new int[mensaje.length()];
         int indice = 0;
         for (char caracter : mensaje.toCharArray()) {
-            int valor = (int) caracter; // Convertir el caracter a su valor numérico
-            int cifrado = squareAndMultiply(valor, clave, n); // Aplicar el algoritmo Square and Multiply
-            mensajeCifrado[indice] = cifrado; // Almacenar el bloque cifrado en el arreglo
+            int valor = (int) caracter;
+            int cifrado = squareAndMultiply(valor, clave, n);
+            mensajeCifrado[indice] = cifrado;
             indice++;
         }
         return mensajeCifrado;
@@ -165,23 +164,24 @@ public class SistemaDeCifradoRSA {
     private static String descifrarMensaje(int[] mensajeCifrado, int clave, int n) {
         StringBuilder descifrado = new StringBuilder();
         for (int bloque : mensajeCifrado) {
-            int descifradoNum = squareAndMultiply(bloque, clave, n); // Aplicar el algoritmo Square and Multiply
-            descifrado.append((char) descifradoNum); // Convertir el número descifrado a un caracter y agregarlo al mensaje
+            int descifradoNum = squareAndMultiply(bloque, clave, n);
+            descifrado.append((char) descifradoNum);
         }
         return descifrado.toString();
     }
+    
     public static int squareAndMultiply(int base, int exponente, int modulo) {
-        long result = 1; // Usamos long para evitar desbordamientos
-        base %= modulo; // Reducimos la base al módulo para eficiencia
+        long result = 1;
+        base %= modulo;
 
         while (exponente > 0) {
             if (exponente % 2 == 1) {
-                result = (result * base) % modulo; // Si el exponente es impar, multiplicamos al resultado
+                result = (result * base) % modulo;
             }
-            exponente >>= 1; // Dividimos el exponente por 2
-            base = (base * base) % modulo; // Elevamos al cuadrado la base y la reducimos al módulo
+            exponente >>= 1;
+            base = (base * base) % modulo;
         }
 
-        return (int) result; // Convertimos el resultado de vuelta a entero y lo retornamos
+        return (int) result;
     }
 }
