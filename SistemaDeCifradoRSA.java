@@ -44,6 +44,7 @@ public class SistemaDeCifradoRSA {
     public static int[] generarClavesRSA(Scanner teclado) {
         System.out.println("Generación de Claves RSA");
 
+        // Pedir al usuario que ingrese dos números primos grandes p y q
         int p = generarNumeroPrimo(teclado);
         int q;
         do {
@@ -80,6 +81,7 @@ public class SistemaDeCifradoRSA {
                 break;
             }
         } while (true);
+        teclado.nextLine();
         return primo;
     }
 
@@ -109,6 +111,7 @@ public class SistemaDeCifradoRSA {
                 System.out.println(e + " no es coprimo con " + phiN + ". Inténtelo nuevamente.");
             }
         } while (true);
+        teclado.nextLine();
         return e;
     }
 
@@ -165,14 +168,19 @@ public class SistemaDeCifradoRSA {
         StringBuilder descifrado = new StringBuilder();
         for (int bloque : mensajeCifrado) {
             int descifradoNum = squareAndMultiply(bloque, clave, n);
-            descifrado.append((char) descifradoNum);
+            if (descifradoNum >= 32 && descifradoNum <= 126) {
+                char caracter = (char) descifradoNum;
+                descifrado.append(caracter);
+            } else {
+                descifrado.append('?'); // Caracter de reemplazo para valores no imprimibles
+            }
         }
         return descifrado.toString();
     }
-    
+
     public static int squareAndMultiply(int base, int exponente, int modulo) {
         long result = 1;
-        base %= modulo;
+        base %= modulo; // Reducimos la base al módulo para mejorar la eficiencia
 
         while (exponente > 0) {
             if (exponente % 2 == 1) {
